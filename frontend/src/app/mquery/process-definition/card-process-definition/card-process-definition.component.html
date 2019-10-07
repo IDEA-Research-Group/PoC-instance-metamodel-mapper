@@ -1,0 +1,38 @@
+<nb-flip-card [showToggleButton]="false" [class.flipped]="flipped">
+  <nb-card-front>
+    <nb-card>
+      <nb-card-header>
+        <div class="col">{{processDefinition.name}}</div>
+      </nb-card-header>
+      <nb-card-body>
+        {{processDefinition.description}}
+      </nb-card-body>
+      <nb-card-footer>
+        <nb-actions size="medium" fullWidth>
+          <nb-action (click)="flipped=!flipped" icon="nb-edit"></nb-action>
+          <nb-action (click)="view()" icon="nb-keypad"></nb-action>
+          <nb-action (click)="details()" icon="fa fa fa-bar-chart-o"></nb-action>
+          <nb-action (click)="delete()" icon="nb-trash"></nb-action>
+        </nb-actions>
+      </nb-card-footer>
+    </nb-card>
+  </nb-card-front>
+  <nb-card-back>
+    <nb-card>
+      <nb-card-header>Editing {{processDefinition.name}}</nb-card-header>
+      <nb-card-body>
+        <form #processDefinitionForm="ngForm" *ngIf="flipped" (ngSubmit)="update(); flipped=!flipped;">
+          <ngx-form-process-definition [processDefinition]="processDefinition" [processesEngines]="processEngines"
+                                       [connection_selected]="processDefinition.matching.connection"
+                                       [table_selected]="processDefinition.matching.principal_table"></ngx-form-process-definition>
+          <button [disabled]="!processDefinitionForm.form.valid" type="submit" class="btn btn-primary btn-sm">Send</button>
+        </form>
+      </nb-card-body>
+      <nb-card-footer>
+        <button class="btn btn-secondary btn-icon btn-sm" (click)="flipped=!flipped">
+          <i class="nb-arrow-thin-left align-middle"></i> Cancel
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </nb-card-back>
+</nb-flip-card>

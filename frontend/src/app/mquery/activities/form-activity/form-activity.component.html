@@ -1,0 +1,184 @@
+<div class="form-group ">
+  <input required name="name" [(ngModel)]="activity.name" #name="ngModel"
+         type="text"  class="form-control" placeholder="Name">
+  <div *ngIf="name.invalid && (name.dirty || name.touched)">
+    <nb-alert status="danger">
+      <div *ngIf="name.errors.required">
+        Name is required.
+      </div>
+    </nb-alert>
+  </div>
+</div>
+
+<div class="form-group">
+            <textarea id="description"
+                      name="description" [(ngModel)]="activity.description"
+                      class="form-control" placeholder="Description"></textarea>
+</div>
+
+<div class="form-group">
+  <label>Process Definitions</label>
+  <select class="form-control" [(ngModel)]="activity.process_definition_id"
+          #process_engine_id="ngModel" name="process_engine_id">
+    <option value=""> Select its process definition </option>
+    <option *ngFor="let process of processDefinitions" [selected]="activity.id == process.id" value="{{ process.id }}">{{ process.name }}</option>
+  </select>
+</div>
+
+
+
+<hr>
+
+<h2>Definitions Matching</h2>
+<p>Here, you have to select which database and fields are the correct data for this process</p>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label>Connection</label>
+      <select class="form-control" [(ngModel)]="connection_selected" (change)="getAllTablesFields()" [compareWith]="compareConnections"
+              #connection="ngModel" name="connection_selected">
+        <option value="">Select one DB</option>
+        <option *ngFor="let connection of connections"  [ngValue]="connection">Name: {{connection.connection}} - Driver: {{connection.driver}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label>Table</label>
+      <select class="form-control" [(ngModel)]="table_selected" (change)="setProcesstable()"
+              #table="ngModel" name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let table of tables"  [value]="table">{{table}}</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!--Select id-->
+<div *ngIf="table_selected && tables_fields">
+  <!--Process Reference-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>FK</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="activity.matching.process_fk" [compareWith]="compareFields"
+              name="table_selected">
+        <option *ngFor="let field of tables_fields[table_selected]"
+                [ngValue]="field" >
+          Name: {{field.column_name}} - Type: {{field.data_type}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <!--ID-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>ID</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="activity.matching.id" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"
+                [ngValue]="field" >
+          Name: {{field.column_name}} - Type: {{field.data_type}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <!--Name-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Name</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="activity.matching.name" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--startTime-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Start Time</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="activity.matching.startTime" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--endTime-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>End Time</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="activity.matching.endTime" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="{{ null }}">Select one field</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+
+  <!--Duratiopn-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Duration</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="activity.matching.duration" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--Canceled-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Canceled</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="activity.matching.canceled" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--CompletedScope-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Completed Scope</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="activity.matching.completedScope" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--Assignee-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Asignee</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="activity.matching.assignee" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+
+</div>
+

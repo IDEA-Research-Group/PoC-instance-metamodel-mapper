@@ -1,0 +1,209 @@
+<!---->
+<div class="row">
+  <div class="col-sm-6">
+    <div class="form-group ">
+      <label for="name">Process Name</label>
+      <input required name="name" [(ngModel)]="processDefinition.name" #name="ngModel"
+             type="text"  class="form-control" placeholder="Name" id="name">
+      <div *ngIf="name.invalid && (name.dirty || name.touched)">
+        <nb-alert status="danger">
+          <div *ngIf="name.errors.required">
+            Name is required.
+          </div>
+        </nb-alert>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="form-group ">
+      <label for="key">Process Key</label>
+      <input required name="key" [(ngModel)]="processDefinition.key" #key="ngModel"
+             type="text"  class="form-control" placeholder="Key" id="key">
+      <div *ngIf="key.invalid && (key.dirty || key.touched)">
+        <nb-alert status="danger">
+          <div *ngIf="key.errors.required">
+            key is required.
+          </div>
+        </nb-alert>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="form-group ">
+      <label for="category">Process Category</label>
+      <input required name="category" [(ngModel)]="processDefinition.category" #category="ngModel"
+             type="text"  class="form-control" placeholder="Category" id="category">
+    </div>
+
+  </div>
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label>Process Engine</label>
+      <select class="form-control" [(ngModel)]="processDefinition.process_engine_id"
+              #process_engine_id="ngModel" name="process_engine_id">
+        <option value="">Select its process engine</option>
+        <option *ngFor="let engine of processesEngines" [selected]="processDefinition.process_engine_id == engine.id" value="{{ engine.id }}">{{ engine.name }}</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="form-group">
+  <label for="description">Process Description</label>
+  <textarea id="description"
+            name="description" [(ngModel)]="processDefinition.description"
+            class="form-control" placeholder="Description"></textarea>
+</div>
+<div class="form-group ">
+  <nb-checkbox [value]="processDefinition.suspended" [status]="'warning'" id="suspended"> Suspended</nb-checkbox>
+</div>
+
+
+
+<hr>
+
+<h2>Definitions Matching</h2>
+<p>Here, you have to select which database and fields are the correct data for this process</p>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label>Connection</label>
+      <select class="form-control" [(ngModel)]="connection_selected" (change)="getAllTablesFields()" [compareWith]="compareConnections"
+              #connection="ngModel" name="connection_selected">
+        <option value="">Select one DB</option>
+        <option *ngFor="let connection of connections"  [ngValue]="connection"
+                [selected]="processDefinition.matching.connection == connection">Name: {{connection.connection}}
+          - Driver: {{connection.driver}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label>Table</label>
+      <select class="form-control" [(ngModel)]="table_selected" (change)="setProcesstable()"
+              #table="ngModel" name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let table of tables"  [value]="table">{{table}}</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+ <!--Select id-->
+<div *ngIf="table_selected && tables_fields">
+  <!--ID-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>ID</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="processDefinition.matching.id" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"
+                [ngValue]="field" >
+          Name: {{field.column_name}} - Type: {{field.data_type}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <!--Ended-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Ended</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="processDefinition.matching.ended" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--Suspended-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Suspended</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="processDefinition.matching.suspended" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--businessKey-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Business Key</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="processDefinition.matching.businessKey" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--startUserId-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Start User Id</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="processDefinition.matching.startUserId" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--durationInMillis-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Duration In Millis</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="processDefinition.matching.durationInMillis" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--startTime-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>Start Time</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="processDefinition.matching.startTime" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="">Select one table</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+  <!--endTime-->
+  <div class="form-group row" >
+    <div class="col-sm-3 col-form-label">
+      <label>End Time</label>
+    </div>
+    <div class="col-sm-9">
+      <select class="form-control" [(ngModel)]="processDefinition.matching.endTime" [compareWith]="compareFields"
+              name="table_selected">
+        <option value="{{ null }}">Select one field</option>
+        <option *ngFor="let field of tables_fields[table_selected]"  [ngValue]="field" >Name: {{field.column_name}} - Type: {{field.data_type}}</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+ <!--Select ended-->
+ <!--Select suspended-->
+ <!--Select businessKey-->
+ <!--Select startUserId-->
+ <!--Select durationInMillis-->
+ <!--Select startTime-->
+ <!--Select endTime-->

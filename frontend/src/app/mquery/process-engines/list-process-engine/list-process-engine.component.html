@@ -1,0 +1,21 @@
+<div class="row mb-3">
+  <div class="col d-inline-flex">
+    <div class="">
+      <h1 class="d-inline">Process Engines</h1>
+    </div>
+    <div class="container-btn ml-3 p-l-5">
+      <button class="btn btn-primary btn-icon" (click)="new()">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<toaster-container></toaster-container>
+<div class="row">
+  <div class="col-md-12"
+       *ngFor="let processEngine of processesEngines">
+    <ngx-card-process-engine [processEngine]="processEngine"
+                             (deleted)="delete($event)" (edited)="update($event)">
+    </ngx-card-process-engine>
+  </div>
+</div>

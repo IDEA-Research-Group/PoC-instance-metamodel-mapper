@@ -1,0 +1,56 @@
+<!--Process Details-->
+<div class="row row-eq-height" *ngIf="process">
+  <!--Process Card-->
+  <ngx-card-process-definition class="col" [processDefinition]="process"></ngx-card-process-definition>
+  <!--Count Instances-->
+  <nb-card class="col">
+    <nb-card-body><h1><span class="number-instances"> {{ count_instances }} </span>Instances</h1></nb-card-body>
+  </nb-card>
+</div>
+
+<!--Process InstancesDetails on Table-->
+<div class="row">
+  <div class="col">
+    <ngx-instances-table [instances]="instances" ></ngx-instances-table>
+  </div>
+</div>
+
+<!--List Activities cards-->
+<ngx-list-activities></ngx-list-activities>
+<div class="row" *ngIf="process">
+  <h1 class="col-12">Activity Instances of {{ process.name }}</h1>
+</div>
+
+
+<!-- Details about instances -->
+<div class="row p-4"  *ngIf="activity_statistics">
+  <!-- Count instances -->
+  <nb-card class="col">
+    <nb-card-body class="row d-inline-flex row-eq-height">
+      <div class="col mt-5">
+        <ngx-activities-instances-statistics [activity_statistics]="activity_statistics"></ngx-activities-instances-statistics>
+      </div>
+      <div class="col">
+        <!--<h1 class="mt-5"><span class="number-instances align-middle"> {{ count_activity_instances }} </span>Activity Instances</h1>-->
+        <h1 class="mt-3">Activity Instances <span class="number-instances align-middle"> Statistics </span></h1>
+        <ngx-activities-instances-pie-statistics [activity_statistics]="activity_statistics"></ngx-activities-instances-pie-statistics>
+      </div>
+    </nb-card-body>
+  </nb-card>
+  <!-- Statistics about instances -->
+  <!--<nb-card class="col-8">-->
+    <!--<nb-card-body>-->
+    <!--</nb-card-body>-->
+  <!--</nb-card>-->
+
+</div>
+<div class="row mb-4" *ngIf="!(activity_instances.length>0)">
+  <div class="col text-center">
+    <button class="btn btn-primary" (click)="getActivityInstancesList()"> Load Instances</button>
+  </div>
+</div>
+<div class="row">
+  <div class="col" *ngIf="activity_instances.length>0">
+    <ngx-table-activities-instances  [instances]="activity_instances" ></ngx-table-activities-instances>
+  </div>
+</div>

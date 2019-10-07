@@ -1,0 +1,12 @@
+<nb-card>
+  <nb-card-header>
+    Process Instances
+  </nb-card-header>
+
+  <nb-card-body>
+    <!--<input #search class="search" type="text" placeholder="Search..." (keydown.enter)="onSearch(search.value)">-->
+
+    <ng2-smart-table [settings]="settings" [source]="source" (userRowSelect)="onClickView($event)">
+    </ng2-smart-table>
+  </nb-card-body>
+</nb-card>

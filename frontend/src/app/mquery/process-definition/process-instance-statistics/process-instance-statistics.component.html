@@ -1,0 +1,21 @@
+
+<div>
+  <nb-card>
+    <nb-card-header>Process Instances Statistics</nb-card-header>
+    <nb-card-body>
+      <p> Here you can see how many instances exists of each definition.</p>
+      <br>
+        <ngx-charts-bar-vertical
+          [scheme]="colorScheme"
+          [results]="results"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel">
+        </ngx-charts-bar-vertical>
+
+
+    </nb-card-body>
+  </nb-card>
+</div>

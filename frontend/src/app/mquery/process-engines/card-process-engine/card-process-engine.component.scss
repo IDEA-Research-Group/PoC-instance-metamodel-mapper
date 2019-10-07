@@ -1,0 +1,21 @@
+.icon-buttons {
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    min-width: 4rem;
+  }
+}
+
+.icon-buttons:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+nb-actions nb-action i.control-icon{
+
+}
+
+.nb-theme-corporate nb-actions nb-action i.control-icon {
+  color: #444444 !important;
+  font-weight: bold !important;
+}
