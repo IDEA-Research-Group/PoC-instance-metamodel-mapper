@@ -40,7 +40,15 @@ Once you have the project, get into `laradock` folder and type the following com
 
 `docker-compose up -d nginx mysql php-fpm workspace redis`
 
-This command will build and download all you need to set the docker environment. You'll need to use this tool with an Oracle database running in your system. If you want to use it also with docker, you can use this image `wnameless/oracle-xe-11g:16.04`.
+This command will build and download all you need to set the docker environment. After this, you will need to run the migrations of the project to prepare MySQL with the structure of the Metamodel. To do this, first of all you'll need to access the command line of the laravel project. Use following command for this purpose:
+
+`docker-compose exec workspace bash`
+
+Now, you'll see something like `var/www` at the beginning of your terminal and you can run commands that belong to laravel. To run migrations simply type:
+
+`php artisan migrate`
+
+You'll need also to use this tool with an Oracle database running in your system. If you want to use it also with docker, you can use this image `wnameless/oracle-xe-11g:16.04`.
 
 Note that if you have some of those services already running in your system for any other purposes, you might need to adapt your `.env` file to ensure ports and configurations of the services have no conflict.
 
