@@ -46,8 +46,10 @@ This command will build and download all you need to set the docker environment.
 
 Now, you'll see something like `var/www` at the beginning of your terminal and you can run commands that belong to laravel. To install dependencies and run migrations simply type:
 
-```composer install
-php artisan migrate```
+```
+composer install
+php artisan migrate
+```
 
 You'll need also to use this tool with an Oracle database running in your system. If you want to use it also with docker, you can use this image `wnameless/oracle-xe-11g:16.04`.
 
